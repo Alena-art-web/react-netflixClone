@@ -12,6 +12,8 @@ const SignIn = () => {
     const dispatch = useDispatch()
     const isAuth = useSelector((state: RootState) => state.user.data.userId)
 
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/
+
     const {
         handleSubmit,
         register,
@@ -29,24 +31,24 @@ const SignIn = () => {
         return <Navigate to='/' />
     }
 
-    const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const onSubmit: SubmitHandler<Inputs> = (data) => {
         const { email, password } = data
         const auth = getAuth()
-       
+
         signInWithEmailAndPassword(auth, email, password)
-        .then(({user}) => {
-            dispatch(getUser({
-                userId: user.uid,
-                userEmail: user.email
-            }))
-            localStorage.setItem('user', JSON.stringify({
-                userId: user.uid,
-                userEmail: user.email
-            }))
-        })
-        .catch(console.error)
-        
-        reset()
+            .then(({ user }) => {
+                dispatch(getUser({
+                    userId: user.uid,
+                    userEmail: user.email
+                }))
+                localStorage.setItem('user', JSON.stringify({
+                    userId: user.uid,
+                    userEmail: user.email
+                }))
+            })
+            .catch(console.error)
+
+        //reset()
     }
 
 
@@ -69,19 +71,28 @@ const SignIn = () => {
                                 className='p-3 my-2 bg-gray-700 rounded'
                                 placeholder='Email'
                                 {...register("email", {
-                                    required: true,
-
+                                    required: {
+                                        value: true,
+                                        message: 'This field is required'
+                                    },
+                                    pattern: {
+                                        value: emailRegex,
+                                        message: 'Email is not correct'
+                                    }
                                 })}
                             />
-                            {errors.email && <span>{errors.email.message} </span>}
+                            {errors.email && <span className='text-white'>{errors.email.message} </span>}
                             <input
                                 className='p-3 my-2 bg-gray-700 rounded'
                                 placeholder='Password'
                                 {...register("password", {
-                                    required: true,
+                                    required: {
+                                        value: true,
+                                        message: 'This field is required'
+                                    },
                                     maxLength: {
                                         value: 10,
-                                        message: "максисмум 10 символов"
+                                        message: "Length must be not more 10"
                                     }
                                 })}
                             />
@@ -89,7 +100,7 @@ const SignIn = () => {
                             {errors.password && <span>This field is required</span>}
 
                             <button
-                                className='cursor-pointer block p-3 bg-red-600 my-6 rounded font-bold'
+                                className={isValid ? 'cursor-pointer block p-3 bg-red-600 my-6 rounded font-bold' : 'block p-3 bg-gray-600 my-6 rounded font-bold'}
                                 type="submit"
                                 disabled={!isValid}
                             >

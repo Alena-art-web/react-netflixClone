@@ -1,12 +1,8 @@
 import React from 'react'
 import { useForm, SubmitHandler } from "react-hook-form"
 import {auth} from'../firebase'
-import { 
-    createUserWithEmailAndPassword, 
-    signOut,
-    onAuthStateChanged
-} from 'firebase/auth'
-import { Link, Navigate } from 'react-router-dom'
+import { createUserWithEmailAndPassword} from 'firebase/auth'
+import { Link} from 'react-router-dom'
 
 
 type Inputs = {
@@ -27,6 +23,8 @@ const SignUp = () => {
     } = useForm<Inputs>({
         mode: 'onBlur'
     })
+
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         console.log(data)
@@ -54,28 +52,37 @@ const SignUp = () => {
                                 className='p-3 my-2 bg-gray-700 rounded'
                                 placeholder='Email'
                                 {...register("email", {
-                                    required: true,
-
+                                    required: {
+                                        value: true,
+                                        message: 'This field is required'
+                                    },
+                                    pattern: {
+                                        value: emailRegex,
+                                        message: 'Email is not correct'
+                                    }
                                 })}
                             />
-                            {errors.email && <span>{errors.email.message} </span>}
+                            {errors.email && <span className='text-white'>{errors.email.message} </span>}
                             <input
                                 className='p-3 my-2 bg-gray-700 rounded'
                                 placeholder='Password'
                                 {...register("password", {
-                                    required: true,
+                                    required: {
+                                        value: true,
+                                        message: 'This field is required'
+                                    },
                                     maxLength: {
                                         value: 10,
-                                        message: "максисмум 10 символов"
+                                        message: "Length must be not more 10"
                                     }
                                 })}
                             />
 
                             {errors.password && <span>This field is required</span>}
 
-                            <button 
-                                className='cursor-pointer block p-3 bg-red-600 my-6 rounded font-bold' 
-                                type="submit" 
+                            <button
+                                className={isValid ? 'cursor-pointer block p-3 bg-red-600 my-6 rounded font-bold' : 'block p-3 bg-gray-600 my-6 rounded font-bold'}
+                                type="submit"
                                 disabled={!isValid}
                             >
                                 Registration
