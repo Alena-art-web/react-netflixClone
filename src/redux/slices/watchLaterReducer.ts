@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { movieType } from "../../types/movieType"
 import { getItemsFromLS } from "../../untils/getUserData"
+import { RootState } from "../store"
 
 
 type initialStateType = {
@@ -36,5 +37,7 @@ const watchLaterSlice = createSlice({
 })
 
 export const {setItems, removeItem, clearItems} = watchLaterSlice.actions
+
+export const selectWatchLater = (state: RootState) => state.watchLater.items
 
 export default watchLaterSlice.reducer

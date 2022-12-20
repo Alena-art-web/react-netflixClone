@@ -1,13 +1,10 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { request } from "http";
-import requests from "../../Requests";
-import { itemsType, movieType, userType } from "../../types/movieType";
+import { createSlice } from "@reduxjs/toolkit";
+import {userType } from "../../types/movieType";
 import { getUserDataFromLS } from "../../untils/getUserData";
+import { RootState } from "../store";
 
 type initialStateType = {
     data: userType;
-    
 }
 
 const user = getUserDataFromLS()
@@ -33,5 +30,7 @@ const userSlice = createSlice({
 })
 
 export const { getUser } = userSlice.actions
+
+export const selectUser = (state: RootState) => state.user.data
 
 export default userSlice.reducer

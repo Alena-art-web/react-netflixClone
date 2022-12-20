@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { movieType } from "../../types/movieType"
 import { getItemsFromLS } from "../../untils/getUserData"
+import { RootState } from "../store"
 
 
-type initialStateType = {
+export type initialStateType = {
     items: movieType[]
 }
 
@@ -37,5 +38,7 @@ const favoritesSlice = createSlice({
 })
 
 export const {setItems, removeItem, clearItems} = favoritesSlice.actions
+
+export const selectFav = (state: RootState) => state.favorites.items
 
 export default favoritesSlice.reducer

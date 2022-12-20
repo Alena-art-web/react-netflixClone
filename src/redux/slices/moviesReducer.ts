@@ -3,6 +3,7 @@ import axios from "axios";
 import { request } from "http";
 import requests from "../../Requests";
 import { itemsType, movieType } from "../../types/movieType";
+import { RootState } from "../store";
 
 type initialStateType = {
     items:movieType[];
@@ -49,5 +50,7 @@ const moviesSlice = createSlice({
 })
 
 export const {getMovies} = moviesSlice.actions
+
+export const selectMovies = (state: RootState) => state.movies
 
 export default moviesSlice.reducer

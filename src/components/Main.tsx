@@ -1,15 +1,14 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect} from 'react'
 import { useSelector } from 'react-redux'
-import { Navigate, useNavigate } from 'react-router-dom'
-import { fetchMovies } from '../redux/slices/moviesReducer'
+import { useNavigate } from 'react-router-dom'
+import { fetchMovies, selectMovies } from '../redux/slices/moviesReducer'
 import { setItems } from '../redux/slices/watchLaterReducer'
 import { RootState, useAppDispatch } from '../redux/store'
 import requests from '../Requests'
 
 const Main = () => {
-    const [watchLater, setWatchLater] = useState(false)
-    const { items } = useSelector((state: RootState) => state.movies)
+    const { items } = useSelector(selectMovies)
     const isAuth = useSelector((state: RootState) => state.user.data.userId)
     const item: any = items[Math.floor(Math.random() * items.length)]
     const dispatch = useAppDispatch()
@@ -22,10 +21,6 @@ const Main = () => {
         getMovies()
 
     }, [])
-
-
-    //console.log(items);
-
 
     const textLength = (str: string, num: number) => {
         if (str?.length > num) {
@@ -42,8 +37,6 @@ const Main = () => {
         } else {
             navigate('/auth')
         }
-
-
     }
 
     return (
